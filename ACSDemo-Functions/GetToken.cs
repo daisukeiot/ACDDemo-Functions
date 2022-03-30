@@ -78,7 +78,7 @@ namespace Microsoft.ACDDEmo
             log.LogInformation($"{identityAndTokenResponse.Value.AccessToken.ToString()}");
             log.LogInformation($"\nCreated an identity with ID: {identity.Id}");
             log.LogInformation($"\nIssued an access token with 'voip' scope that expires at {expiresOn}:");
-            log.LogInformation(token);
+            //log.LogInformation(token);
 
             //Console.WriteLine($"\nCreated an identity with ID: {identity.Id}");
             string responseMessage = $"{{IdentityId : \"{identity}\", token : \"{token}\"}}";
