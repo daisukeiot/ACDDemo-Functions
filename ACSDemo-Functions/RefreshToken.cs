@@ -19,13 +19,22 @@ namespace ACSDemo_Functions
     {
         [FunctionName("RefreshToken")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
             CommunicationIdentityClient client;
             IActionResult requestResponse;
             Response<AccessToken> tokenResponse;
+
+            string requestBody = String.Empty;
+
+            using (StreamReader streamReader = new StreamReader(req.Body))
+            {
+                requestBody = await streamReader.ReadToEndAsync();
+            }
+
+            PostData data = JsonConvert.DeserializeObject<PostData>(requestBody);
 
             try
             {
@@ -39,7 +48,7 @@ namespace ACSDemo_Functions
                 return new BadRequestObjectResult(requestResponse);
             }
 
-            string acsId = req.Query["id"];
+            string acsId = data.id;
 
             try
             {
@@ -77,6 +86,11 @@ namespace ACSDemo_Functions
 
 
             return new OkObjectResult(requestResponse);
+        }
+
+        public class PostData
+        {
+            public string id { get; set; }
         }
 
         private static IActionResult CreateResponse(object message, HttpStatusCode httpCode)
